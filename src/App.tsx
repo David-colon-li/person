@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronRight, Link as LinkIcon, Wind, CloudRain, Sun, Sparkles, Ghost, Award, GraduationCap, Laptop } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Link as LinkIcon, Wind, CloudRain, Sun, Sparkles, Ghost, Award, GraduationCap, Laptop } from 'lucide-react';
 import ProjectDetail from './ProjectDetail';
 import { WeatherCanvas, WeatherType } from './WeatherCanvas';
 import { RobinBird } from './components/RobinBird';
@@ -134,44 +134,146 @@ const VideoBackground = () => {
   );
 };
 
-// 银白金属发光边框卡片网格
+// 可展开项目卡片（主卡展开 + 侧卡收拢）
 const ProjectGrid = () => {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full relative z-10">
-      {MOCK_PROJECTS.map((item) => (
-        <a key={item.id} href={item.link} className="relative group p-[1px] rounded-3xl overflow-hidden block isolate hover:z-20 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/5">
-          
-          {/* Default metallic shine wrapper border */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#e0e0e0] via-[#f5f5f5] to-[#d4d4d4] group-hover:opacity-100 transition-opacity duration-700 z-0" />
-          
-          {/* Animated metallic spinning inner border */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] bg-[conic-gradient(from_0deg,transparent_0_340deg,rgba(255,255,255,1)_360deg)] group-hover:animate-[spin_3s_linear_infinite] opacity-0 group-hover:opacity-100 z-0" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] bg-[conic-gradient(from_180deg,transparent_0_160deg,rgba(160,160,160,0.5)_180deg)] group-hover:animate-[spin_3s_linear_infinite] opacity-0 group-hover:opacity-100 z-0" />
+  const [activeId, setActiveId] = useState(MOCK_PROJECTS[0]?.id ?? 1);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
 
-          {/* Main Card Content Layer */}
-          <div className="relative z-10 w-full h-[240px] bg-white/70 backdrop-blur-xl rounded-[23px] p-8 flex flex-col justify-between transition-colors duration-500 group-hover:bg-white">
-            <div className="flex-1">
-              <h3 className="text-xl md:text-2xl font-display font-bold text-black mb-3 line-clamp-2">
-                {item.title}
-              </h3>
-              <p className="text-brand-muted/70 font-sans text-sm line-clamp-3">
-                探索此 AI 实验的运行架构与设计哲学，点击进入了解更多项目的技术栈与创意灵感。
-              </p>
-            </div>
-            
-            <div className="flex items-center gap-2 mt-6">
-              <span className="text-[11px] font-mono px-3 py-1 bg-black/[0.03] text-brand-black/60 rounded-full border border-black/5 backdrop-blur-md">
-                PROJECT-{String(item.id).padStart(3, '0')}
-              </span>
-              <div className="ml-auto w-8 h-8 rounded-full border border-black/10 bg-white/50 flex items-center justify-center text-brand-muted group-hover:text-black group-hover:bg-white group-hover:border-black/20 transition-all transform group-hover:scale-110 shadow-sm">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+  const updateScrollState = () => {
+    const el = trackRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+  };
+
+  const scrollCards = (direction: 'left' | 'right') => {
+    const el = trackRef.current;
+    if (!el) return;
+    const distance = Math.max(280, Math.floor(el.clientWidth * 0.42));
+    el.scrollBy({ left: direction === 'right' ? distance : -distance, behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    updateScrollState();
+    const onResize = () => updateScrollState();
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  return (
+    <div className="w-full relative z-10 px-2 lg:px-4">
+      <div className="mb-5 flex items-center justify-between text-xs tracking-[0.16em] uppercase text-brand-black/55">
+        <span>精选项目</span>
+        <span>向右滑动查看更多</span>
+      </div>
+      <button
+        type="button"
+        onClick={() => scrollCards('left')}
+        disabled={!canScrollLeft}
+        className="hidden lg:flex absolute left-[-6px] top-[56%] -translate-y-1/2 z-20 w-11 h-11 items-center justify-center rounded-full border border-white/55 bg-white/45 backdrop-blur-xl text-black/70 shadow-[0_8px_24px_rgba(148,163,184,0.28)] transition-all hover:bg-white/65 hover:text-black disabled:opacity-35 disabled:cursor-not-allowed"
+        aria-label="查看左侧项目"
+      >
+        <ChevronLeft className="w-5 h-5" />
+      </button>
+      <button
+        type="button"
+        onClick={() => scrollCards('right')}
+        disabled={!canScrollRight}
+        className="hidden lg:flex absolute right-[-6px] top-[56%] -translate-y-1/2 z-20 w-11 h-11 items-center justify-center rounded-full border border-white/55 bg-white/45 backdrop-blur-xl text-black/70 shadow-[0_8px_24px_rgba(148,163,184,0.28)] transition-all hover:bg-white/65 hover:text-black disabled:opacity-35 disabled:cursor-not-allowed"
+        aria-label="查看右侧项目"
+      >
+        <ChevronRight className="w-5 h-5" />
+      </button>
+      <div
+        ref={trackRef}
+        onScroll={updateScrollState}
+        className="overflow-x-auto px-1 lg:px-3 pt-4 pb-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        <div className="mx-auto flex min-w-max max-w-[1220px] snap-x snap-mandatory gap-4 lg:gap-5 lg:h-[460px]">
+        {MOCK_PROJECTS.map((item) => {
+          const isActive = item.id === activeId;
+
+          return (
+            <motion.article
+              key={item.id}
+              layout
+              animate={{
+                scale: isActive ? 1.02 : 1,
+                y: isActive ? -4 : 0,
+              }}
+              onMouseEnter={() => setActiveId(item.id)}
+              onFocus={() => setActiveId(item.id)}
+              onClick={() => setActiveId(item.id)}
+              transition={{ type: "spring", stiffness: 220, damping: 26 }}
+              className={[
+                "group snap-start relative isolate overflow-hidden rounded-[28px] backdrop-blur-2xl",
+                "border transition-[height,box-shadow,transform,background-color,border-color] duration-500 ease-out",
+                isActive
+                  ? "bg-white/32 border-white/62 shadow-[0_24px_58px_rgba(148,163,184,0.35)]"
+                  : "bg-white/12 border-white/28 shadow-[0_10px_24px_rgba(148,163,184,0.2)] hover:bg-white/22 hover:border-white/45",
+                "h-[280px] lg:h-full",
+                "w-[82vw] max-w-[420px] min-w-[320px] lg:min-w-0",
+                isActive ? "lg:basis-[520px]" : "lg:basis-[170px]",
+              ].join(" ")}
+              aria-label={`打开项目：${item.title}`}
+            >
+              <div
+                className={[
+                  "absolute inset-0 z-0 transition-opacity duration-500",
+                  isActive
+                    ? "opacity-100 bg-[radial-gradient(circle_at_16%_18%,rgba(255,255,255,0.62),transparent_48%),linear-gradient(155deg,rgba(255,255,255,0.28),rgba(191,219,254,0.26)_48%,rgba(226,232,240,0.5))]"
+                    : "opacity-85 bg-[radial-gradient(circle_at_16%_18%,rgba(255,255,255,0.42),transparent_48%),linear-gradient(155deg,rgba(255,255,255,0.1),rgba(191,219,254,0.15)_48%,rgba(226,232,240,0.28))]",
+                ].join(" ")}
+              />
+              <div className="absolute -inset-10 z-0 rounded-[40px] bg-[radial-gradient(circle_at_20%_10%,rgba(251,191,36,0.22),transparent_45%),radial-gradient(circle_at_90%_90%,rgba(14,165,233,0.22),transparent_40%)] opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100" />
+              <div className="absolute inset-y-0 right-0 w-[45%] bg-[linear-gradient(120deg,transparent,rgba(255,255,255,0.45),transparent)] translate-x-[85%] group-hover:translate-x-[-20%] transition-transform duration-700 ease-out" />
+
+              <div className="relative z-10 h-full p-6 lg:p-7 flex flex-col">
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-mono px-3 py-1 rounded-full bg-white/20 border border-white/35 text-brand-black/70">
+                    PROJECT-{String(item.id).padStart(3, "0")}
+                  </span>
+                  <span className="ml-auto text-[11px] tracking-[0.16em] uppercase text-brand-black/65">Lab Note</span>
+                </div>
+
+                <div className="mt-auto">
+                  <h3 className="text-2xl lg:text-[34px] leading-tight font-display font-bold text-black pr-4">
+                    {item.title}
+                  </h3>
+
+                  <AnimatePresence initial={false}>
+                    {isActive && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 14 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ duration: 0.28, ease: "easeOut" }}
+                        className="mt-4 space-y-4"
+                      >
+                        <p className="max-w-[520px] text-sm lg:text-[15px] text-brand-black/70 leading-relaxed">
+                          探索此 AI 实验的运行架构与设计哲学，进入项目详情查看核心流程、数据逻辑与关键交互设计。
+                        </p>
+                        <a
+                          href={item.link}
+                          className="inline-flex items-center gap-2 text-sm font-medium text-black/90"
+                        >
+                          查看项目详情
+                          <span className="w-8 h-8 rounded-full border border-white/50 bg-white/40 backdrop-blur-md flex items-center justify-center">
+                            <ChevronRight className="w-4 h-4" />
+                          </span>
+                        </a>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
-            </div>
-          </div>
-        </a>
-      ))}
+            </motion.article>
+          );
+        })}
+        </div>
+      </div>
     </div>
   );
 };
@@ -179,7 +281,10 @@ const ProjectGrid = () => {
 // 资源库数据表格组件
 const ResourceTable = () => {
   return (
-    <div className="w-full overflow-x-auto pb-10">
+    <div className="w-full pb-10">
+      <div className="relative rounded-[24px] border border-white/45 bg-white/14 backdrop-blur-xl px-4 py-4 shadow-[0_10px_30px_rgba(148,163,184,0.16)]">
+        <div className="pointer-events-none absolute inset-0 rounded-[24px] bg-[radial-gradient(circle_at_12%_8%,rgba(255,255,255,0.35),transparent_40%),linear-gradient(145deg,rgba(255,255,255,0.12),rgba(191,219,254,0.14)_45%,rgba(226,232,240,0.2))]" />
+        <div className="relative w-full overflow-x-auto">
       <div className="min-w-[800px]">
         {/* 表头 */}
         <div className="grid grid-cols-[2fr_1.5fr_3fr_3fr] gap-6 py-4 px-4 -mx-4 border-b border-black/20 text-sm font-medium text-brand-muted">
@@ -225,6 +330,8 @@ const ResourceTable = () => {
             </div>
           ))}
         </div>
+      </div>
+      </div>
       </div>
     </div>
   );
@@ -430,4 +537,3 @@ export default function App() {
     </>
   );
 }
-
