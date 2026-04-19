@@ -39,7 +39,7 @@ const Navigation = ({ weather, onCycleWeather, logoRef }: { weather: WeatherType
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-10 py-10 bg-white/50 backdrop-blur-sm lg:px-15">
       <div ref={logoRef} className="text-[32px] font-display font-bold tracking-[-1px]">
-        Li®
+        Bond®
       </div>
       
       <div className="hidden md:flex items-center space-x-10">
@@ -382,9 +382,9 @@ export default function App() {
             </div>
 
             <div className="absolute bottom-10 left-10 right-10 flex justify-between z-30">
-              <span className="text-micro text-brand-muted">始于二零二四</span>
+              <span className="text-micro text-brand-muted">始于二零二六</span>
               <span className="text-micro text-brand-muted hidden sm:block">人文与技术的共振</span>
-              <span className="text-micro text-brand-muted">基于 AI 与 数字人文 视角</span>
+              <span className="text-micro text-brand-muted">基于 AI 与 人文 视角</span>
             </div>
           </motion.div>
         )}
@@ -407,7 +407,7 @@ export default function App() {
             <section className="relative z-20 flex flex-col px-10 lg:px-15 pt-40 pb-20 min-h-[80vh] justify-center">
             <div className="max-w-[1000px] space-y-10">
               <h1 className="text-5xl md:text-[88px] font-display font-normal tracking-tight-heading leading-tight-heading animate-fade-rise opacity-0">
-                山谷里的AI Lab
+              Bond 的 AI Lab 
               </h1>
               
               <p className="max-w-[550px] text-[18px] font-sans leading-relaxed text-white animate-fade-rise opacity-0 delay-200 drop-shadow-md">
@@ -489,28 +489,28 @@ export default function App() {
                   <img src={`/avatar.png?c=${Date.now()}`} alt="David Li Avatar" className="w-full h-auto object-contain mix-blend-multiply contrast-[1.05]" />
                 </div>
                 
-                <h2 className="text-4xl md:text-5xl font-display font-bold text-black tracking-widest mb-6 uppercase">David Li</h2>
+                <h2 className="text-4xl md:text-5xl font-display font-bold text-black tracking-widest mb-6 uppercase">Li</h2>
                 
                 {/* Info Tags - High-end Editorial Style with Cute Icons */}
                 <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-3 text-[14px] md:text-[15px] font-display text-brand-black/80 tracking-widest">
                   
                   <span className="drop-shadow-sm hover:text-black transition-colors flex items-center gap-1.5 focus:outline-none">
                     <Sparkles className="w-4 h-4 text-amber-500 flex-shrink-0" />
-                    <span>前美团产运兼AI顾问</span>
+                    <span>前美团产运实习兼AI顾问</span>
                   </span>
                   
                   <span className="text-brand-muted/30 font-thin flex-shrink-0">|</span>
                   
                   <span className="drop-shadow-sm hover:text-black transition-colors flex items-center gap-1.5 focus:outline-none">
                     <Laptop className="w-4 h-4 text-slate-400 flex-shrink-0" />
-                    <span>计算机二/三级 <span className="font-sans italic text-brand-muted/70 tracking-normal text-[13px]">（会修但不想修）</span></span>
+                    <span>计算机二/三级国家级证书持有者 <span className="font-sans italic text-brand-muted/70 tracking-normal text-[13px]">（会修但不想修）</span></span>
                   </span>
                   
                   <span className="text-brand-muted/30 font-thin flex-shrink-0">|</span>
                   
                   <span className="drop-shadow-sm hover:text-black transition-colors flex items-center gap-1.5 focus:outline-none">
                     <Award className="w-4 h-4 text-yellow-500 flex-shrink-0" />
-                    <span>CET-6 通关者</span>
+                    <span>CET-6 边缘通关者</span>
                   </span>
                   
                   <span className="text-brand-muted/30 font-thin flex-shrink-0">|</span>
@@ -524,7 +524,7 @@ export default function App() {
                   
                   <span className="drop-shadow-sm hover:text-black transition-colors flex items-center gap-1.5 focus:outline-none">
                     <GraduationCap className="w-4 h-4 text-blue-400 flex-shrink-0" />
-                    <span>硕士研究生 <span className="font-sans italic text-brand-muted/70 tracking-normal text-[13px]">（快毕业版）</span></span>
+                    <span>国家级硕士研究生 <span className="font-sans italic text-brand-muted/70 tracking-normal text-[13px]">（快毕业版）</span></span>
                   </span>
                 </div>
 
