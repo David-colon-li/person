@@ -1,0 +1,31 @@
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-rise {
+  animation: fade-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.delay-200 {
+  animation-delay: 0.2s;
+}
+
+.delay-400 {
+  animation-delay: 0.4s;
+}
+
+.tight-heading {
+  letter-spacing: -2.46px;
+  line-height: 0.95;
+}
+
+.muted-text {
+  color: #6F6F6F;
+}
